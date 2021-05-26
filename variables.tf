@@ -25,11 +25,11 @@ variable "ssh_username" {
 
 variable "ssh_key_name" {
     description = "Defines the name for the ssh key"
-    default = "admin_ssh_key"
+    default = "my_key"
     type = string
 }
 
-resource "hcloud_ssh_key" "admin_ssh_key" {
+resource "hcloud_ssh_key" "primary_ssh_key" {
     name       = var.ssh_key_name
     public_key = file(var.ssh_public_key)
 }
@@ -58,50 +58,3 @@ variable hetzner_machine_additional_packages {
     type = string
 }
 
-//
-
-variable "github_actions_runner_count" {
-    description = "Defines the number of runners to be provided. This option is equal to Machines at hetzner."
-    default = 1
-    type = number
-}
-
-variable "github_actions_runner_labels" {
-    description = "Defines a list of labels used to identify the runners. The list is divided by separating the individual entries with `,`."
-    default = ""
-    type = string
-}
-
-variable "github_actions_runner_replace_existing" {
-    description = "Specifies whether to replace existing Github action runners with the same name."
-    default = false
-    type = bool
-}
-
-variable "github_owner" {
-    description = "Defines the organisation name or repository owner."
-    default = ""
-    type = string
-}
-
-variable "github_repository_name" {
-    description = "Sets the name of the repository. This option is only used if you use self-hosted Github runners at the repository level."
-    default = ""
-    type = string
-}
-
-variable "github_authentication_user" {
-    description = "Sets the user used for issuing new registration tokens. Ensure that the user has the appropriate permissions. "
-    type = string
-}
-
-variable "github_authentication_token" {
-    description = " Sets the personal access token for the configured user in the variable github_authentication_user."
-    type = string
-}
-
-variable "github_runner_type" {
-    description = "Defines the github runner type. Available values are: repo, org"
-    default = "repo"
-    type = string
-}
