@@ -1,12 +1,42 @@
-# terraform-hetzner-github-actions
+# create another hetzner cloud server with terraform
 
 This repository provides a tool to request and setup another virtual machine on the hetzner cloud.
+
+By specifiying the token you implicitly specify the project this machine will belong to.
+
+Projects: https://console.hetzner.cloud/projects
 
 ## usage
 
 0. have terraform ready, e.g. as in https://www.terraform.io/docs/cli/install/apt.html
-1. create a terraform.tfvars (see examples below) in the directory where this README is
-2. run terraform in the directory where this README is
+1. create a terraform.tfvars in the directory where this README.md is. Example:
+
+```ini
+hcloud_token="<my-hcloud-token>"
+# https://console.hetzner.cloud/projects - choose projects - security - api-token
+
+hetzner_machine_type="cx11"
+hetzner_machine_os="debian-10"
+hetzner_machine_additional_packages="vim screen tmux apt-transport-https ca-certificates curl lsb-release"
+# Consider: sudo git gnupg pass iotop ncdu iftop dnsutils tcpdump
+# Seem to be installed in any case: rsync tree wget
+
+machine_name="my-test"
+# if co-workers use the same project, prevent overlapping names of machines.
+# only use valid dns hostname characters: a-z0-9 and -
+
+# if already part of the project:
+hetzner_additional_public_key_ids = ["pf-local-machines"]
+
+# upload one from the machine that you call terraform on:
+ssh_private_key="/home/programmfabrik/local_machines"
+ssh_public_key="/home/programmfabrik/local_machines.pub"
+ssh_key_name="local_machines"
+```
+
+   Available variables: see below and in variables.tf
+
+2. run terraform in the directory where this README.md is:
 
 ```
 terraform init     # Prepare your working directory for other commands
@@ -19,7 +49,7 @@ terraform apply    # Create or update infrastructure
 terraform destroy  # Destroy previously-created infrastructure
 ```
 
-## Avaiable variables for terraform.tfvars
+## Available variables for terraform.tfvars
 
 | Variable | Type | Default value | Description |
 |----------|------|---------------|-------------|
@@ -32,17 +62,8 @@ terraform destroy  # Destroy previously-created infrastructure
 | `hetzner_additional_public_key_ids` | []string | [] | Adds public keys to the server that are already registered with hetzner in the project of the hcloud_token |
 | `hetzner_machine_additional_packages` | string | "" | Defines additional packages that must be installed on the machine. Each package name must be separated by a space ` `. |
 
-## Example terraform.tfvars
+## Syntax
 
-```ini
-hcloud_token="<my-hcloud-token>"
+terraform: https://www.terraform.io/docs/language/syntax/configuration.html
 
-hetzner_machine_type="cx11"
-hetzner_machine_os="debian-10"
-hetzner_machine_additional_packages="vim screen sudo git tmux apt-transport-https ca-certificates curl gnupg lsb-release pass"
-
-ssh_private_key="/home/programmfabrik/local_machines"
-ssh_public_key="/home/programmfabrik/local_machines.pub"
-ssh_key_name="local_machines"
-```
-
+hetzner: https://registry.terraform.io/providers/hetznercloud/hcloud/latest/docs/resources/server

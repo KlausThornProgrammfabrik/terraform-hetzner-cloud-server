@@ -6,19 +6,19 @@ variable "hcloud_token" {
 }
 
 variable "ssh_private_key" {
-    description = "Defines the path to the location of the private key. The private key is used together with the public key to connect to the machine."
+    description = "Defines the path to the location of the private key. The private key is used together with the public key to connect to the machines."
     default     = "~/.ssh/id_rsa"
     type = string
 }
 
 variable "ssh_public_key" {
-    description = "Public Key to authorized the access to the machines"
+    description = "Public Key to authorize the access to the machines"
     default     = "~/.ssh/id_rsa.pub"
     type = string
 }
 
 variable "ssh_username" {
-    description = "Username that should be used to connect to the nodes"
+    description = "Username that should be used to connect to the machines"
     default = "root"
     type = string
 }
@@ -29,7 +29,7 @@ variable "ssh_key_name" {
     type = string
 }
 
-resource "hcloud_ssh_key" "primary_ssh_key" {
+resource "hcloud_ssh_key" "local_ssh_key" {
     name       = var.ssh_key_name
     public_key = file(var.ssh_public_key)
 }
@@ -46,6 +46,12 @@ variable "hetzner_machine_os" {
     type = string
 }
 
+variable "machine_name" {
+    description = "A name for your machine made of a-z0-9 and -."
+    default = "my-test"
+    type = string
+}
+
 variable hetzner_additional_public_key_ids {
     description = "Adds public keys to the server that are already registered at hetzner"
     default = []
@@ -53,7 +59,7 @@ variable hetzner_additional_public_key_ids {
 }
 
 variable hetzner_machine_additional_packages {
-    description = "Defines additional packages that must be installed on the machine. Each package name must be separated by a space ` `."
+    description = "Defines packages to be installed on the machine. Package names must be separated by a space."
     default = ""
     type = string
 }
